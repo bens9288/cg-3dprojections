@@ -4,7 +4,24 @@ function mat4x4Perspective(prp, srp, vup, clip) {
     // 2. rotate VRC such that (u,v,n) align with (x,y,z)
     // 3. shear such that CW is on the z-axis
     // 4. scale such that view volume bounds are ([z,-z], [z,-z], [-1,zmin])
+    let n = (prp - srp).normalize();
+    let u = (vup.cross(n)).normalize();
+    let v = n.cross(u);
+    let cw = new Vector3((clip[0] - clip[1])/2, (clip[2] - clip[3])/2, -clip[4]); // check this might be wrong
+    let dop = cw - prp;
+    let shx = -dop.x / dop.z;
+    let shy = -dop.y / dop.z;
 
+    let translate = mat4x4Translate(mat4x4Identity, -prp[0], -prp[1], -prp[2]);
+    let rotate = new Vector3();
+    rotate.values = [[u.x, u.y, u.z, 0],
+                  [v.x, v.y, v.z, 0],
+                  [n.x, n.y, n.z, 0],
+                  [0, 0, 0, 1]];
+    let shear = mat4x4ShearXY(mat4x4Identity, shx, shy);
+    let scale = mat4x4Scale(mat4x4Identity, 2*clip[4]/((clip[1]-clip[0])*clip[5]), 2*clip[4]/((clip[3]-clip[2])*clip[5]), 1/clip[5]); // check this as well
+    let nPer = Matrix.multiply([scale, shear, rotate, translate]);
+    return nPer;
     // ...
     // let transform = Matrix.multiply([...]);
     // return transform;
@@ -13,14 +30,20 @@ function mat4x4Perspective(prp, srp, vup, clip) {
 // create a 4x4 matrix to project a perspective image on the z=-1 plane
 function mat4x4MPer() {
     let mper = new Matrix(4, 4);
-    // mper.values = ...;
+    mper.values = [[1, 0, 0, 0],
+                   [0, 1, 0, 0],
+                   [0, 0, 1, 0]
+                   [0, 0, -1, 0]];
     return mper;
 }
 
 // create a 4x4 matrix to translate/scale projected vertices to the viewport (window)
 function mat4x4Viewport(width, height) {
     let viewport = new Matrix(4, 4);
-    // viewport.values = ...;
+    viewport.values = [[width/2, 0, 0, width/2],
+                       [0, height/2, 0, height/2],
+                       [0, 0, 1, 0],
+                       [0, 0, 0, 1]];
     return viewport;
 }
 
