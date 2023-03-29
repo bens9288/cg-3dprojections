@@ -4,27 +4,71 @@ function mat4x4Perspective(prp, srp, vup, clip) {
     // 2. rotate VRC such that (u,v,n) align with (x,y,z)
     // 3. shear such that CW is on the z-axis
     // 4. scale such that view volume bounds are ([z,-z], [z,-z], [-1,zmin])
-    let n = (prp - srp).normalize();
-    let u = (vup.cross(n)).normalize();
+    
+    let n = new Vector(3);
+    n.values = [prp.x-srp.x, prp.y-srp.y, prp.z-srp.z];
+    n.normalize();
+    //console.log("n:");
+    //console.log(n);
+
+    u = vup.cross(n);
+    u.normalize();
+    //console.log("u:");
+    //console.log(u);
+
     let v = n.cross(u);
-    let cw = new Vector3((clip[0] - clip[1])/2, (clip[2] - clip[3])/2, -clip[4]); // check this might be wrong
-    let dop = cw - prp;
+    //console.log("v:");
+    //console.log(v);
+
+    let cw = new Vector(3);
+    cw.values = [(clip[0] + clip[1])/2, (clip[2] + clip[3])/2, -clip[4]];
+    //console.log("cw:");
+    //console.log(cw);
+
+    let dop = new Vector(3);
+    //dop.values = [cw.x-prp.x, cw.y-prp.y, cw.z-prp.z] CHECK THIS PRP* at origin?
+    dop.values = cw.values;
+    //console.log("dop:");
+    //console.log(dop);
+
+    let translate = new Matrix(4, 4);
+    mat4x4Translate(translate, -prp.x, -prp.y, -prp.z);
+    //console.log("trans:");
+    //console.log(translate);
+
+    let rotate = new Matrix(4, 4);
+    rotate.values = [[u.x, u.y, u.z, 0],
+                     [v.x, v.y, v.z, 0],
+                     [n.x, n.y, n.z, 0],
+                     [0, 0, 0, 1]];
+    //console.log("rotate:");
+    //console.log(rotate);
+
+    let shear = new Matrix(4, 4);
     let shx = -dop.x / dop.z;
     let shy = -dop.y / dop.z;
+    //console.log(shx);
+    //console.log(shy);
+    mat4x4ShearXY(shear, shx, shy);
+    //console.log("shear:");
+    //console.log(shear);
 
-    let translate = mat4x4Translate(mat4x4Identity, -prp[0], -prp[1], -prp[2]);
-    let rotate = new Vector3();
-    rotate.values = [[u.x, u.y, u.z, 0],
-                  [v.x, v.y, v.z, 0],
-                  [n.x, n.y, n.z, 0],
-                  [0, 0, 0, 1]];
-    let shear = mat4x4ShearXY(mat4x4Identity, shx, shy);
-    let scale = mat4x4Scale(mat4x4Identity, 2*clip[4]/((clip[1]-clip[0])*clip[5]), 2*clip[4]/((clip[3]-clip[2])*clip[5]), 1/clip[5]); // check this as well
+    let scale = new Matrix(4, 4);
+    let sx = 2 * clip[4] / ((clip[1] - clip[0]) * clip[5]);
+    let sy = 2 * clip[4] / ((clip[3] - clip[2]) * clip[5]);
+    let sz = 1 / clip[5];
+    //console.log(sx);
+    //console.log(sy);
+    //console.log(sz);
+    mat4x4Scale(scale, sx, sy, sz);
+    //console.log("scale:");
+    //console.log(scale);
+
     let nPer = Matrix.multiply([scale, shear, rotate, translate]);
+    //console.log(nPer);
+
     return nPer;
-    // ...
-    // let transform = Matrix.multiply([...]);
-    // return transform;
+
 }
 
 // create a 4x4 matrix to project a perspective image on the z=-1 plane
