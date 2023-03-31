@@ -63,42 +63,36 @@ class Renderer {
         let prp = new Vector3(0, 10, -5);
         let srp = new Vector3(20, 15, -40);
         let vup = new Vector3(1, 1, 0);
-        let nPer = mat4x4Perspective(prp, srp, vup, [-12, 6, -12, 6, 10, 100]);
+        let nPer = mat4x4Perspective(prp, srp, vup, [-15, 9, -12, 6, 10, 100]);
         let mPer = mat4x4MPer();
         let view = mat4x4Viewport(800, 600);
-        console.log("tranform");
-        let transform = Matrix.multiply([mPer, nPer]);
-        //console.log(transform);
-        console.log(this.scene.models[0].edges.length);
 
-        for (let e = 0; e < this.scene.models[0].edges.length; e++) {
-            console.log("E");
-            console.log(e);
-            for (let i = 0; i < this.scene.models[0].edges[e].length-1; i++) {
+        for (let e = 0; e < this.scene.models[0].edges.length; e++) {   // Loops Edges
+            for (let i = 0; i < this.scene.models[0].edges[e].length-1; i++) {  // Loops Verts
 
-                console.log("vert1");
+                //console.log("vert1");
                 let vert1Index = this.scene.models[0].edges[e][i];
-                let vert1W = Matrix.multiply([transform, this.scene.models[0].vertices[vert1Index]]);
-                vert1W = Matrix.multiply([view, vert1W]);
-                //console.log(vert1W);
-                let vert1 = new Vector3(vert1W.x / vert1W.w, vert1W.y / vert1W.w);
-                console.log(vert1);
+                let vert1W = Matrix.multiply([nPer, this.scene.models[0].vertices[vert1Index]]);
 
-                console.log("vert2");
+                //console.log("vert2");
                 let vert2Index = this.scene.models[0].edges[e][(i+1)];
-                let vert2W = Matrix.multiply([transform, this.scene.models[0].vertices[vert2Index]]);
-                vert2W = Matrix.multiply([view, vert2W]);
-                //console.log(vert1W);
+                let vert2W = Matrix.multiply([nPer, this.scene.models[0].vertices[vert2Index]]);
+
+                //
+                //  Clip Here
+                //
+
+                vert1W = Matrix.multiply([view, mPer, vert1W]);                     // Projects to 2D then to view
+                let vert1 = new Vector3(vert1W.x / vert1W.w, vert1W.y / vert1W.w);  // Converts Vectors to x-y Coords
+
+                vert2W = Matrix.multiply([view, mPer, vert2W]);
                 let vert2 = new Vector3(vert2W.x / vert2W.w, vert2W.y / vert2W.w);
-                console.log(vert2);
 
                 console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
                 this.drawLine(vert1.x, vert1.y, vert2.x, vert2.y);
 
             }
         }
-        
-        //console.log(this.scene.models[0].edges);
 
         // TODO: implement drawing here!
         // For each model
