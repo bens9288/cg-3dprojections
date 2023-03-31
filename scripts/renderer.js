@@ -65,7 +65,7 @@ class Renderer {
         let vup = new Vector3(1, 1, 0);
         let nPer = mat4x4Perspective(prp, srp, vup, [-12, 6, -12, 6, 10, 100]);
         let mPer = mat4x4MPer();
-        let view = mat4x4Viewport(600, 800);
+        let view = mat4x4Viewport(800, 600);
         console.log("tranform");
         let transform = Matrix.multiply([mPer, nPer]);
         //console.log(transform);
