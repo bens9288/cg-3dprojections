@@ -15,9 +15,14 @@ class Renderer {
         this.canvas.height = canvas.height;
         this.ctx = this.canvas.getContext('2d');
         this.scene = this.processScene(scene);
-        this.enable_animation = false;  // <-- disabled for easier debugging; enable for animation
+        this.enable_animation = true;  // <-- disabled for easier debugging; enable for animation
         this.start_time = null;
         this.prev_time = null;
+
+        this.prp = new Vector3(0, 10, -5);
+        this.srp = new Vector3(20, 15, -40);
+        this.vup = new Vector3(1, 1, 0);
+
     }
 
     //
@@ -38,20 +43,35 @@ class Renderer {
     //
     moveLeft() {
 
+        this.prp.x--;
+        this.srp.x--;
+        // not right but onto something
+        //this.prp.y++;   
+        //this.srp.y++;
+
     }
     
     //
     moveRight() {
+
+        this.prp.x++;
+        this.srp.x++;
 
     }
     
     //
     moveBackward() {
 
+        this.prp.z++;
+        this.srp.z++;
+
     }
     
     //
     moveForward() {
+
+        this.prp.z--;
+        this.srp.z--;
 
     }
 
@@ -60,10 +80,7 @@ class Renderer {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         console.log('draw()');
-        let prp = new Vector3(0, 10, -5);
-        let srp = new Vector3(20, 15, -40);
-        let vup = new Vector3(1, 1, 0);
-        let nPer = mat4x4Perspective(prp, srp, vup, [-15, 9, -12, 6, 10, 100]);
+        let nPer = mat4x4Perspective(this.prp, this.srp, this.vup, [-15, 9, -12, 6, 10, 100]);
         let mPer = mat4x4MPer();
         let view = mat4x4Viewport(800, 600);
 
