@@ -23,6 +23,45 @@ class Renderer {
         this.srp = new Vector3(20, 15, -40);
         this.vup = new Vector3(1, 1, 0);
 
+        //
+        //  Square
+        //
+
+        this.cubeVert = [];
+        let center = this.scene.models[1].center;
+        let width = this.scene.models[1].width;
+        let height = this.scene.models[1].height;
+        let depth = this.scene.models[1].depth;
+
+        for (let i = 0; i < 8; i++) {   // Loops all 8
+
+            this.cubeVert[i] = new Vector(4);
+            this.cubeVert[i].values = [0, 0, 0, 1];
+           
+            //console.log(center.y);
+            if (i < 4) {  // Left Verts
+                this.cubeVert[i].x = center.x - (width / 2);
+            }
+            else {  // Right Verts
+                this.cubeVert[i].x = center.x + (width / 2);
+            }
+
+            if (i % 2 == 0) {   // Top Verts
+                this.cubeVert[i].y = center.y + (height / 2);
+            }
+            else {  // Bottom Verts
+                this.cubeVert[i].y = center.y - (height / 2);
+            }
+            
+            if (i == 2 || i == 3 || i == 6 || i == 7) { // Near Verts
+                this.cubeVert[i].z = center.z + (depth / 2);
+            }
+            else {  // Far Verts
+                this.cubeVert[i].z = center.z - (depth / 2);
+            }
+
+        }
+
     }
 
     //
@@ -105,11 +144,42 @@ class Renderer {
                 vert2W = Matrix.multiply([view, mPer, vert2W]);
                 let vert2 = new Vector3(vert2W.x / vert2W.w, vert2W.y / vert2W.w);
 
-                console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
+                //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
                 this.drawLine(vert1.x, vert1.y, vert2.x, vert2.y);
 
             }
         }
+
+        //
+        //  Square
+        //
+
+        let changeVertW = [];
+        let vert = [];
+        for (let i = 0; i < 8; i++) {
+            changeVertW[i] = Matrix.multiply([nPer, this.cubeVert[i]]);
+            changeVertW[i] = Matrix.multiply([view, mPer, changeVertW[i]]);
+            vert[i] = new Vector3(changeVertW[i].x / changeVertW[i].w, changeVertW[i].y / changeVertW[i].w, changeVertW[i].z / changeVertW[i].w);
+        }
+
+        for (let i = 0; i < 8; i++) {
+            this.drawLine(vert[i].x, vert[i].y, vert[i].x, vert[i].y);
+        }
+
+        // Its beautfiul... isn't it
+        this.drawLine(vert[0].x, vert[0].y, vert[1].x, vert[1].y);
+        this.drawLine(vert[0].x, vert[0].y, vert[2].x, vert[2].y);
+        this.drawLine(vert[0].x, vert[0].y, vert[4].x, vert[4].y);
+        this.drawLine(vert[7].x, vert[7].y, vert[3].x, vert[3].y);
+        this.drawLine(vert[7].x, vert[7].y, vert[5].x, vert[5].y);
+        this.drawLine(vert[7].x, vert[7].y, vert[6].x, vert[6].y);
+        this.drawLine(vert[1].x, vert[1].y, vert[3].x, vert[3].y);
+        this.drawLine(vert[2].x, vert[2].y, vert[3].x, vert[3].y);
+        this.drawLine(vert[1].x, vert[1].y, vert[5].x, vert[5].y);
+        this.drawLine(vert[6].x, vert[6].y, vert[2].x, vert[2].y);
+        this.drawLine(vert[6].x, vert[6].y, vert[4].x, vert[4].y);
+        this.drawLine(vert[4].x, vert[4].y, vert[5].x, vert[5].y);
+
 
         // TODO: implement drawing here!
         // For each model

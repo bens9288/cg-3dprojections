@@ -83,6 +83,13 @@ function init() {
                     [3, 8],
                     [4, 9]
                 ]
+            },
+            {
+                type: 'cube',
+                center: [0, 0, 0],
+                width: 5,
+                height: 5,
+                depth: 5,
             }
         ]
     };
