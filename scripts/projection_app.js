@@ -90,6 +90,14 @@ function init() {
                 width: 5,
                 height: 5,
                 depth: 5,
+                edges: [    // Ask Prof if this ok to keep
+                    [0, 4, 6, 2, 0],
+                    [1, 5, 7, 3, 1],
+                    [0, 1],
+                    [2, 3],
+                    [4, 5],
+                    [6, 7]
+                ]
             }
         ]
     };

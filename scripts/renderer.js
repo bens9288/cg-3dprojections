@@ -19,6 +19,10 @@ class Renderer {
         this.start_time = null;
         this.prev_time = null;
 
+        //this.prp = this.scene.view.prp;
+        //this.srp = this.scene.view.srp;
+        ///this.vup = this.scene.view.vup;
+
         this.prp = new Vector3(0, 10, -5);
         this.srp = new Vector3(20, 15, -40);
         this.vup = new Vector3(1, 1, 0);
@@ -150,6 +154,34 @@ class Renderer {
             }
         }
 
+        for (let e = 0; e < this.scene.models[1].edges.length; e++) {   // Loops Edges
+            for (let i = 0; i < this.scene.models[1].edges[e].length-1; i++) {  // Loops Verts
+
+                //console.log("vert1");
+                let vert1Index = this.scene.models[1].edges[e][i];
+                let vert1W = Matrix.multiply([nPer, this.cubeVert[vert1Index]]);
+
+                //console.log("vert2");
+                let vert2Index = this.scene.models[1].edges[e][(i+1)];
+                let vert2W = Matrix.multiply([nPer, this.cubeVert[vert2Index]]);
+
+                //
+                //  Clip Here
+                //
+
+                vert1W = Matrix.multiply([view, mPer, vert1W]);                     // Projects to 2D then to view
+                let vert1 = new Vector3(vert1W.x / vert1W.w, vert1W.y / vert1W.w);  // Converts Vectors to x-y Coords
+
+                vert2W = Matrix.multiply([view, mPer, vert2W]);
+                let vert2 = new Vector3(vert2W.x / vert2W.w, vert2W.y / vert2W.w);
+
+                //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
+                this.drawLine(vert1.x, vert1.y, vert2.x, vert2.y);
+
+            }
+        }
+
+/*
         //
         //  Square
         //
@@ -158,6 +190,11 @@ class Renderer {
         let vert = [];
         for (let i = 0; i < 8; i++) {
             changeVertW[i] = Matrix.multiply([nPer, this.cubeVert[i]]);
+
+            //
+            // Clip Here
+            //
+
             changeVertW[i] = Matrix.multiply([view, mPer, changeVertW[i]]);
             vert[i] = new Vector3(changeVertW[i].x / changeVertW[i].w, changeVertW[i].y / changeVertW[i].w, changeVertW[i].z / changeVertW[i].w);
         }
@@ -180,6 +217,7 @@ class Renderer {
         this.drawLine(vert[6].x, vert[6].y, vert[4].x, vert[4].y);
         this.drawLine(vert[4].x, vert[4].y, vert[5].x, vert[5].y);
 
+*/
 
         // TODO: implement drawing here!
         // For each model
