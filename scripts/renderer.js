@@ -143,11 +143,14 @@ class Renderer {
                 //
                 let line = {pt0: vert1W, pt1: vert2W};
                 // console.log(line);
-                let z_min = 0.0;
+                let z_min = 10/100;
                 let returned = this.clipLinePerspective(line, z_min);
                 // console.log(returned);
-                vert1W = returned.pt0;
-                vert2W = returned.pt1;
+                if(returned != null){
+                    vert1W = returned.pt0;
+                    vert2W = returned.pt1;
+                }
+                
                 // console.log("returnedp0:", vert1W, "returnedp1:", vert2W);
                 // let vert1 = returned.pt0;
                 // let vert2 = returned.pt1;
@@ -164,89 +167,47 @@ class Renderer {
             }
         }
 
-        for (let e = 0; e < this.scene.models[1].edges.length; e++) {   // Loops Edges
-            for (let i = 0; i < this.scene.models[1].edges[e].length-1; i++) {  // Loops Verts
+        // for (let e = 0; e < this.scene.models[1].edges.length; e++) {   // Loops Edges
+        //     for (let i = 0; i < this.scene.models[1].edges[e].length-1; i++) {  // Loops Verts
 
-                //console.log("vert1");
-                let vert1Index = this.scene.models[1].edges[e][i];
-                let vert1W = Matrix.multiply([nPer, this.cubeVert[vert1Index]]);
+        //         //console.log("vert1");
+        //         let vert1Index2 = this.scene.models[1].edges[e][i];
+        //         let vert1W2 = Matrix.multiply([nPer, this.cubeVert[vert1Index2]]);
 
-                //console.log("vert2");
-                let vert2Index = this.scene.models[1].edges[e][(i+1)];
-                let vert2W = Matrix.multiply([nPer, this.cubeVert[vert2Index]]);
+        //         //console.log("vert2");
+        //         let vert2Index2 = this.scene.models[1].edges[e][(i+1)];
+        //         let vert2W2 = Matrix.multiply([nPer, this.cubeVert[vert2Index2]]);
 
-                //
-                //  Clip Here
-                //
+        //         //
+        //         //  Clip Here
+        //         let line2 = {pt0: vert1W2, pt1: vert2W2};
+        //         // console.log(line);
+        //         let z_min2 = 10/100;
+        //         let returned2 = this.clipLinePerspective(line2, z_min2);
+        //         // console.log(returned);
+        //         if(returned2.pt0 != null && returned2.pt1 != null){
+        //             vert1W2 = returned2.pt0;
+        //             vert2W2 = returned2.pt1;
+        //         }
+        //         // }
+        //         // vert1W = returned.pt0;
+        //         // vert2W = returned.pt1;
+        //         //
 
-                vert1W = Matrix.multiply([view, mPer, vert1W]);                     // Projects to 2D then to view
-                let vert1 = new Vector3(vert1W.x / vert1W.w, vert1W.y / vert1W.w);  // Converts Vectors to x-y Coords
+        //         vert1W2 = Matrix.multiply([view, mPer, vert1W2]);                     // Projects to 2D then to view
+        //         let vert12 = new Vector3(vert1W2.x / vert1W2.w, vert1W2.y / vert1W2.w);  // Converts Vectors to x-y Coords
 
-                vert2W = Matrix.multiply([view, mPer, vert2W]);
-                let vert2 = new Vector3(vert2W.x / vert2W.w, vert2W.y / vert2W.w);
+        //         vert2W2 = Matrix.multiply([view, mPer, vert2W2]);
+        //         let vert22 = new Vector3(vert2W2.x / vert2W2.w, vert2W2.y / vert2W2.w);
 
-                //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
-                this.drawLine(vert1.x, vert1.y, vert2.x, vert2.y);
+        //         //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
+        //         this.drawLine(vert12.x, vert12.y, vert22.x, vert22.y);
 
-            }
-        }
+        //     }
+        // }
+    }
 
 /*
-        //
-        //  Square
-        //
-
-        let changeVertW = [];
-        let vert = [];
-        for (let i = 0; i < 8; i++) {
-            changeVertW[i] = Matrix.multiply([nPer, this.cubeVert[i]]);
-
-            //
-            // Clip Here
-            //
-
-            changeVertW[i] = Matrix.multiply([view, mPer, changeVertW[i]]);
-            vert[i] = new Vector3(changeVertW[i].x / changeVertW[i].w, changeVertW[i].y / changeVertW[i].w, changeVertW[i].z / changeVertW[i].w);
-        }
-        // let changeVertW = [];
-        // let vert = [];
-        // for (let i = 0; i < 8; i++) {
-        //     changeVertW[i] = Matrix.multiply([nPer, this.cubeVert[i]]);
-        //     changeVertW[i] = Matrix.multiply([view, mPer, changeVertW[i]]);
-
-        //     //attempt to clip cube?
-
-        //     // changeVertW[i+1] = Matrix.multiply([nPer, this.cubeVert[i+1]]);
-        //     // // changeVertW[i+1] = Matrix.multiply([view, mPer, changeVertW[i+1]]);
-
-        //     // // let line = {pt0: changeVertW[i], pt1: changeVertW[i+1]};
-        //     // //     console.log(line);
-        //     // //     let z_min = -10/100;
-        //     // //     let returned = this.clipLinePerspective(line, z_min);
-        //     // //     changeVertW[i] = returned.pt0;
-        //     // //     changeVertW[i+1] = returned.pt1;
-        //     // //     console.log("p0:", vert1W, "p1:", vert2W);
-
-        //     vert[i] = new Vector3(changeVertW[i].x / changeVertW[i].w, changeVertW[i].y / changeVertW[i].w, changeVertW[i].z / changeVertW[i].w);
-        // }
-
-        // for (let i = 0; i < 8; i++) {
-        //     this.drawLine(vert[i].x, vert[i].y, vert[i].x, vert[i].y);
-        // }
-
-        // // Its beautfiul... isn't it
-        // this.drawLine(vert[0].x, vert[0].y, vert[1].x, vert[1].y);
-        // this.drawLine(vert[0].x, vert[0].y, vert[2].x, vert[2].y);
-        // this.drawLine(vert[0].x, vert[0].y, vert[4].x, vert[4].y);
-        // this.drawLine(vert[7].x, vert[7].y, vert[3].x, vert[3].y);
-        // this.drawLine(vert[7].x, vert[7].y, vert[5].x, vert[5].y);
-        // this.drawLine(vert[7].x, vert[7].y, vert[6].x, vert[6].y);
-        // this.drawLine(vert[1].x, vert[1].y, vert[3].x, vert[3].y);
-        // this.drawLine(vert[2].x, vert[2].y, vert[3].x, vert[3].y);
-        // this.drawLine(vert[1].x, vert[1].y, vert[5].x, vert[5].y);
-        // this.drawLine(vert[6].x, vert[6].y, vert[2].x, vert[2].y);
-        // this.drawLine(vert[6].x, vert[6].y, vert[4].x, vert[4].y);
-        // this.drawLine(vert[4].x, vert[4].y, vert[5].x, vert[5].y);
 
 */
 
@@ -259,7 +220,6 @@ class Renderer {
         //     * project to 2D
         //     * translate/scale to viewport (i.e. window)
         //     * draw line
-    }
 
     // Get outcode for a vertex
     // vertex:       Vector4 (transformed vertex in homogeneous coordinates)
@@ -300,21 +260,23 @@ class Renderer {
         let out1 = this.outcodePerspective(p1, z_min);
         let t, pointOut, deltaX, deltaY, deltaZ;
         let lineOut = line;
-        let bool = true;
+        // console.log(lineOut);
+        let bool = false;
         // let deltaX = p1.x - p0.x;
         // let deltaY = p1.y - p0.y;
         // let deltaZ = p1.z - p0.z;
-        
+        // console.log("out0", out0, "out1", out1);
         // TODO: implement clipping here!
-       while(!(out0 | out1)) {
+       while(true) {
             if(!(out0 | out1)) {
                 //trivial accept
-                bool = false;
-                return lineOut;
+                // return lineOut;
+                bool = true;
+                break;
             } else if (out0 & out1) {
                 //trivial reject
-                bool = false;
-                return result;
+                // return result;
+                break;
             } else {
                 //choose outcode that has first 1
                 deltaX = p1.x - p0.x;
@@ -330,36 +292,36 @@ class Renderer {
 
                 if (pointOut & TOP) {
                     t = (p0.y + p0.z) / (-deltaY - deltaZ);
-                    console.log("top");
+                    // console.log("top");
                     lineOut.pt0.x = line.pt0.x + (t *deltaX);
                     lineOut.pt0.y = line.pt0.y + (t *deltaY);
                     lineOut.pt0.z = line.pt0.z + (t *deltaZ);
                 } else if (pointOut & BOTTOM) {
                     t = (-p0.y + p0.z) / (deltaY - deltaZ);
-                    console.log("bot");
+                    // console.log("bot");
                     lineOut.pt0.x = line.pt0.x + (t *deltaX);
                     lineOut.pt0.y = line.pt0.y + (t *deltaY);
                     lineOut.pt0.z = line.pt0.z + (t *deltaZ);
                 } else if (pointOut & RIGHT) {
                     t = (p0.x + p0.z) / (-deltaX - deltaZ);
-                    console.log("right");
+                    // console.log("right");
                     lineOut.pt0.x = line.pt0.x + (t *deltaX);
                     lineOut.pt0.y = line.pt0.y + (t *deltaY);
                     lineOut.pt0.z = line.pt0.z + (t *deltaZ);
                 } else if (pointOut & LEFT) {
                     t = (-p0.x + p0.z) / (deltaX - deltaZ);
-                    console.log("left");
+                    // console.log("left");
                     lineOut.pt0.x = line.pt0.x + (t *deltaX);
                     lineOut.pt0.y = line.pt0.y + (t *deltaY);
                     lineOut.pt0.z = line.pt0.z + (t *deltaZ);
                 } else if (pointOut & FAR) {
                     t = (-p0.z - 1) / deltaZ
-                    console.log("far");
+                    // console.log("far");
                     lineOut.pt0.x = line.pt0.x + (t *deltaX);
                     lineOut.pt0.y = line.pt0.y + (t *deltaY);
                     lineOut.pt0.z = line.pt0.z + (t *deltaZ);
                 } else if (pointOut & NEAR) {
-                    console.log("near");
+                    // console.log("near");
                     t = (p0.z - z_min) / -deltaZ;
                     lineOut.pt0.x = line.pt0.x + (t *deltaX);
                     lineOut.pt0.y = line.pt0.y + (t *deltaY);
@@ -370,16 +332,20 @@ class Renderer {
                 // lineOut.pt0.x = line.pt0.x + (t *deltaX);
                 // lineOut.pt0.y = line.pt0.y + (t *deltaY);
                 // lineOut.pt0.z = line.pt0.z + (t *deltaZ);
-                out0 = this.outcodePerspective(lineOut.pt0, z_min);
+                
+                out0 = this.outcodePerspective(lineOut, z_min);
             } else {
                 // lineOut.pt1.x = line.pt1.x + (t *deltaX);
                 // lineOut.pt1.y = line.pt1.y + (t *deltaY);
                 // lineOut.pt1.z = line.pt1.z + (t *deltaZ);
-                out1 = this.outcodePerspective(lineOut.pt1, z_min);
+                out1 = this.outcodePerspective(lineOut, z_min);
             }
         }
         // console.log(lineOut);
-        return lineOut;
+        if (bool) {
+            return lineOut;
+        }
+        return result;
     }
 
     //
