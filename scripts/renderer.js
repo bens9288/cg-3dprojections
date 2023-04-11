@@ -256,12 +256,12 @@ class Renderer {
                 // console.log(this.rotate);
 
                 let vert1Index = this.scene.models[0].edges[e][i];
-                // let vert1W = Matrix.multiply([nPer, this.rotateHouseY, this.scene.models[0].vertices[vert1Index]]);
-                let vert1W = Matrix.multiply([nPer, this.scene.models[0].vertices[vert1Index]]);
+                let vert1W = Matrix.multiply([nPer, this.rotateHouseY, this.scene.models[0].vertices[vert1Index]]);
+                // let vert1W = Matrix.multiply([nPer, this.scene.models[0].vertices[vert1Index]]);
                 // console.log("vert2");
                 let vert2Index = this.scene.models[0].edges[e][(i+1)];
-                // let vert2W = Matrix.multiply([nPer, this.rotateHouseY, this.scene.models[0].vertices[vert2Index]]);
-                let vert2W = Matrix.multiply([nPer, this.scene.models[0].vertices[vert2Index]]);
+                let vert2W = Matrix.multiply([nPer, this.rotateHouseY, this.scene.models[0].vertices[vert2Index]]);
+                // let vert2W = Matrix.multiply([nPer, this.scene.models[0].vertices[vert2Index]]);
                 // console.log(vert2W);
                 //
                 //  Clip Here
@@ -289,118 +289,118 @@ class Renderer {
         }
         // square = 1
 
-        // for (let e = 0; e < this.scene.models[1].edges.length; e++) {   // Loops Edges
-        //     for (let i = 0; i < this.scene.models[1].edges[e].length-1; i++) {  // Loops Verts
+        for (let e = 0; e < this.scene.models[1].edges.length; e++) {   // Loops Edges
+            for (let i = 0; i < this.scene.models[1].edges[e].length-1; i++) {  // Loops Verts
 
-        //         //console.log("vert1");
-        //         let vert1Index2 = this.scene.models[1].edges[e][i];
-        //         let vert1W2 = Matrix.multiply([nPer, this.rotateCubeX, this.cubeVert[vert1Index2]]);
+                //console.log("vert1");
+                let vert1Index2 = this.scene.models[1].edges[e][i];
+                let vert1W2 = Matrix.multiply([nPer, this.rotateCubeX, this.cubeVert[vert1Index2]]);
 
-        //         //console.log("vert2");
-        //         let vert2Index2 = this.scene.models[1].edges[e][(i+1)];
-        //         let vert2W2 = Matrix.multiply([nPer, this.rotateCubeX, this.cubeVert[vert2Index2]]);
+                //console.log("vert2");
+                let vert2Index2 = this.scene.models[1].edges[e][(i+1)];
+                let vert2W2 = Matrix.multiply([nPer, this.rotateCubeX, this.cubeVert[vert2Index2]]);
 
-        //         //
-        //         //  Clip Here
-        //         let line2 = {pt0: vert1W2, pt1: vert2W2};
-        //         // console.log(line);
-        //         let z_min2 = 10/100;
-        //         let returned2 = this.clipLinePerspective(line2, z_min2);
-        //         // console.log(returned);
-        //         if(returned2 != null){
-        //             vert1W2 = returned2.pt0;
-        //             vert2W2 = returned2.pt1;
-        //             vert1W2 = Matrix.multiply([view, mPer, vert1W2]);                     // Projects to 2D then to view
-        //             let vert12 = new Vector3(vert1W2.x / vert1W2.w, vert1W2.y / vert1W2.w);  // Converts Vectors to x-y Coords
+                //
+                //  Clip Here
+                let line2 = {pt0: vert1W2, pt1: vert2W2};
+                // console.log(line);
+                let z_min2 = 10/100;
+                let returned2 = this.clipLinePerspective(line2, z_min2);
+                // console.log(returned);
+                if(returned2 != null){
+                    vert1W2 = returned2.pt0;
+                    vert2W2 = returned2.pt1;
+                    vert1W2 = Matrix.multiply([view, mPer, vert1W2]);                     // Projects to 2D then to view
+                    let vert12 = new Vector3(vert1W2.x / vert1W2.w, vert1W2.y / vert1W2.w);  // Converts Vectors to x-y Coords
     
-        //             vert2W2 = Matrix.multiply([view, mPer, vert2W2]);
-        //             let vert22 = new Vector3(vert2W2.x / vert2W2.w, vert2W2.y / vert2W2.w);
+                    vert2W2 = Matrix.multiply([view, mPer, vert2W2]);
+                    let vert22 = new Vector3(vert2W2.x / vert2W2.w, vert2W2.y / vert2W2.w);
     
-        //             //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
-        //             this.drawLine(vert12.x, vert12.y, vert22.x, vert22.y);
-        //         }
+                    //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
+                    this.drawLine(vert12.x, vert12.y, vert22.x, vert22.y);
+                }
                 
-        //     }
-        // }
+            }
+        }
 
-        // //cone = 2
+        //cone = 2
 
-        // for (let e = 0; e < this.scene.models[2].edges.length; e++) {   // Loops Edges
-        //     for (let i = 0; i < this.scene.models[2].edges[e].length-1; i++) {  // Loops Verts
+        for (let e = 0; e < this.scene.models[2].edges.length; e++) {   // Loops Edges
+            for (let i = 0; i < this.scene.models[2].edges[e].length-1; i++) {  // Loops Verts
 
-        //         //animation
+                //animation
 
-        //         let vert1Index3 = this.scene.models[2].edges[e][i];
-        //         let vert1W3 = Matrix.multiply([nPer, this.rotateConeZ, this.coneVert[vert1Index3]]);
+                let vert1Index3 = this.scene.models[2].edges[e][i];
+                let vert1W3 = Matrix.multiply([nPer, this.rotateConeZ, this.coneVert[vert1Index3]]);
 
-        //         //console.log("vert2");
-        //         let vert2Index3 = this.scene.models[2].edges[e][(i+1)];
-        //         let vert2W3 = Matrix.multiply([nPer, this.rotateConeZ, this.coneVert[vert2Index3]]);
-        //         // console.log(vert2W);
-        //         //
-        //         //  Clip Here
-        //         //
-        //         let line3 = {pt0: vert1W3, pt1: vert2W3};
-        //         // console.log(line);
-        //         let z_min3 = 10/100;
-        //         let returned3 = this.clipLinePerspective(line3, z_min3);
-        //         // console.log(returned);
-        //         if(returned3 != null){
-        //             vert1W3 = returned3.pt0;
-        //             vert2W3 = returned3.pt1;
-        //             vert1W3 = Matrix.multiply([view, mPer, vert1W3]);                     // Projects to 2D then to view
-        //             let vert13 = new Vector3(vert1W3.x / vert1W3.w, vert1W3.y / vert1W3.w);  // Converts Vectors to x-y Coords
+                //console.log("vert2");
+                let vert2Index3 = this.scene.models[2].edges[e][(i+1)];
+                let vert2W3 = Matrix.multiply([nPer, this.rotateConeZ, this.coneVert[vert2Index3]]);
+                // console.log(vert2W);
+                //
+                //  Clip Here
+                //
+                let line3 = {pt0: vert1W3, pt1: vert2W3};
+                // console.log(line);
+                let z_min3 = 10/100;
+                let returned3 = this.clipLinePerspective(line3, z_min3);
+                // console.log(returned);
+                if(returned3 != null){
+                    vert1W3 = returned3.pt0;
+                    vert2W3 = returned3.pt1;
+                    vert1W3 = Matrix.multiply([view, mPer, vert1W3]);                     // Projects to 2D then to view
+                    let vert13 = new Vector3(vert1W3.x / vert1W3.w, vert1W3.y / vert1W3.w);  // Converts Vectors to x-y Coords
                     
 
-        //             vert2W3 = Matrix.multiply([view, mPer, vert2W3]);
-        //             let vert23 = new Vector3(vert2W3.x / vert2W3.w, vert2W3.y / vert2W3.w);
+                    vert2W3 = Matrix.multiply([view, mPer, vert2W3]);
+                    let vert23 = new Vector3(vert2W3.x / vert2W3.w, vert2W3.y / vert2W3.w);
     
-        //             //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
-        //             this.drawLine(vert13.x, vert13.y, vert23.x, vert23.y);
-        //         }
+                    //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
+                    this.drawLine(vert13.x, vert13.y, vert23.x, vert23.y);
+                }
                 
 
-        //     }
-        // }
+            }
+        }
 
 
         // //cylinder = 3
 
-        // for (let e = 0; e < this.scene.models[3].edges.length; e++) {   // Loops Edges
-        //     for (let i = 0; i < this.scene.models[3].edges[e].length-1; i++) {  // Loops Verts
+        for (let e = 0; e < this.scene.models[3].edges.length; e++) {   // Loops Edges
+            for (let i = 0; i < this.scene.models[3].edges[e].length-1; i++) {  // Loops Verts
 
-        //         //animation
+                //animation
 
-        //         let vert1Index4 = this.scene.models[3].edges[e][i];
-        //         let vert1W4 = Matrix.multiply([nPer, this.rotateCylinderY, this.cylVert[vert1Index4]]);
+                let vert1Index4 = this.scene.models[3].edges[e][i];
+                let vert1W4 = Matrix.multiply([nPer, this.rotateCylinderY, this.cylVert[vert1Index4]]);
 
-        //         //console.log("vert2");
-        //         let vert2Index4 = this.scene.models[3].edges[e][(i+1)];
-        //         let vert2W4 = Matrix.multiply([nPer, this.rotateCylinderY, this.cylVert[vert2Index4]]);
+                //console.log("vert2");
+                let vert2Index4 = this.scene.models[3].edges[e][(i+1)];
+                let vert2W4 = Matrix.multiply([nPer, this.rotateCylinderY, this.cylVert[vert2Index4]]);
 
                 
-        //         let line4 = {pt0: vert1W4, pt1: vert2W4};
-        //         // console.log(line4);
-        //         let z_min4 = 10/100;
-        //         let returned4 = this.clipLinePerspective(line4, z_min4);
-        //         // console.log(returned);
-        //         if(returned4 != null){
-        //             vert1W4 = returned4.pt0;
-        //             vert2W4 = returned4.pt1;
-        //             vert1W4 = Matrix.multiply([view, mPer, vert1W4]);                     // Projects to 2D then to view
-        //             let vert14 = new Vector3(vert1W4.x / vert1W4.w, vert1W4.y / vert1W4.w);  // Converts Vectors to x-y Coords
+                let line4 = {pt0: vert1W4, pt1: vert2W4};
+                // console.log(line4);
+                let z_min4 = 10/100;
+                let returned4 = this.clipLinePerspective(line4, z_min4);
+                // console.log(returned);
+                if(returned4 != null){
+                    vert1W4 = returned4.pt0;
+                    vert2W4 = returned4.pt1;
+                    vert1W4 = Matrix.multiply([view, mPer, vert1W4]);                     // Projects to 2D then to view
+                    let vert14 = new Vector3(vert1W4.x / vert1W4.w, vert1W4.y / vert1W4.w);  // Converts Vectors to x-y Coords
                     
 
-        //             vert2W4 = Matrix.multiply([view, mPer, vert2W4]);
-        //             let vert24 = new Vector3(vert2W4.x / vert2W4.w, vert2W4.y / vert2W4.w);
+                    vert2W4 = Matrix.multiply([view, mPer, vert2W4]);
+                    let vert24 = new Vector3(vert2W4.x / vert2W4.w, vert2W4.y / vert2W4.w);
     
-        //             //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
-        //             this.drawLine(vert14.x, vert14.y, vert24.x, vert24.y);
-        //         }
+                    //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
+                    this.drawLine(vert14.x, vert14.y, vert24.x, vert24.y);
+                }
                 
 
-        //     }
-        // }
+            }
+        }
     }
 
 /*
