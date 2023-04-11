@@ -86,7 +86,7 @@ function init() {
             },
             {
                 type: 'cube',
-                center: [0, 0, 0],
+                center: [5, 5, -20],
                 width: 5,
                 height: 5,
                 depth: 5,
@@ -105,6 +105,28 @@ function init() {
                 radius: 10,
                 slices: 4,
                 stacks: 4
+            },
+            {
+                type: 'cone',
+                center: [5, 20, -30],
+                radius: 3,
+                height: 5,
+                sides: 9,
+                edges : [       //only edges defined is peak to the top
+                    [0,1],
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 1]
+                ]
+            },
+            {
+                type: 'cylinder',
+                center: [5, 20, -20],
+                radius: 3,
+                height: 5,
+                sides: 10,
+                edges : [       //only edges defined is peak to the top
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1],
+                    [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 11]
+                ]
             }
         ]
     };
