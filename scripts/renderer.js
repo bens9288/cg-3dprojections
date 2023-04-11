@@ -76,10 +76,14 @@ class Renderer {
     //
     rotateLeft() {
 
+        this.prp.x++;
+
     }
     
     //
     rotateRight() {
+
+        this.prp.x--;
 
     }
     
@@ -126,7 +130,7 @@ class Renderer {
         let nPer = mat4x4Perspective(this.prp, this.srp, this.vup, [-15, 9, -12, 6, 10, 100]);
         let mPer = mat4x4MPer();
         let view = mat4x4Viewport(800, 600);
-
+/*
         for (let e = 0; e < this.scene.models[0].edges.length; e++) {   // Loops Edges
             for (let i = 0; i < this.scene.models[0].edges[e].length-1; i++) {  // Loops Verts
 
@@ -153,6 +157,7 @@ class Renderer {
 
             }
         }
+*/
 
         for (let e = 0; e < this.scene.models[1].edges.length; e++) {   // Loops Edges
             for (let i = 0; i < this.scene.models[1].edges[e].length-1; i++) {  // Loops Verts
@@ -176,8 +181,59 @@ class Renderer {
                 let vert2 = new Vector3(vert2W.x / vert2W.w, vert2W.y / vert2W.w);
 
                 //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
-                this.drawLine(vert1.x, vert1.y, vert2.x, vert2.y);
+                //this.drawLine(vert1.x, vert1.y, vert2.x, vert2.y);
 
+            }
+        }
+
+        //
+        //  Sphere
+        //
+
+        let vert = [];
+        let vertw = [];
+        let center = this.scene.models[2].center;
+        let radius = this.scene.models[2].radius;
+        vertw[0] = Vector4(center.x, center.y - radius, center.z, 1);
+        vertw[1] = Vector4(center.x, center.y + radius, center.z, 1);
+        //vertw[2] = Vector4(center.x - radius, center.y, center.z, 1);
+        //vertw[3] = Vector4(center.x + radius, center.y, center.z, 1);
+        //vertw[4] = Vector4(center.x, center.y, center.z - radius, 1);
+        //vertw[5] = Vector4(center.x, center.y, center.z + radius, 1);
+        let slices = this.scene.models[2].slices;
+        let stacks = this.scene.models[2].stacks;
+        
+        let i = 2;
+        for (let sl = 1; sl < slices; sl++) {
+            for (let st = 1; st < stacks; st++) {
+                //vertw[i] = Vector4(center.x, (center.y - radius) + (sl * 2 * (radius / slices)), center.z, 1);
+                if (st == 3) {
+                    vertw[i] = Vector4((center.x - radius), (center.y - radius) + (sl * (radius / slices)), (center.z + radius), 1);
+                }
+                else if (st == 1) {
+                    vertw[i] = Vector4((center.x - radius), (center.y - radius) + (sl * 2 * (radius / slices)), (center.z + radius), 1);
+                    //(center.x - radius) + (st * 2 * (radius / stacks))
+                }
+                else {
+                    vertw[i] = Vector4(center.x, (center.y - radius) + (sl * 2 * (radius / slices)), center.z, 1);
+                }
+                i++
+            }
+        }
+        //vertw[vertw.length] = Vector4(center.x + radius, center.y, center.z, 1);
+
+        for (let i = 0; i < vertw.length; i++) {
+            vertw[i] = Matrix.multiply([nPer, vertw[i]]);
+            vertw[i] = Matrix.multiply([view, mPer, vertw[i]]);
+            vert[i] = new Vector3(vertw[i].x / vertw[i].w, vertw[i].y / vertw[i].w, vertw[i].z / vertw[i].w);
+        }
+        for (let i = 0; i < vert.length; i++) {
+            this.drawLine(vert[i].x, vert[i].y, vert[i].x, vert[i].y);
+        }
+
+        for (let i = 0; i < vert.length; i++) {
+            for (let j = 0; j < vert.length; j++) {
+                this.drawLine(vert[i].x, vert[i].y, vert[j].x, vert[j].y);
             }
         }
 

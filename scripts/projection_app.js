@@ -98,6 +98,13 @@ function init() {
                     [4, 5],
                     [6, 7]
                 ]
+            },
+            {
+                type: 'sphere',
+                center: [0, 10, -30],
+                radius: 10,
+                slices: 4,
+                stacks: 4
             }
         ]
     };
