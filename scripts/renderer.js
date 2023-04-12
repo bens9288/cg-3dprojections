@@ -19,14 +19,6 @@ class Renderer {
         this.start_time = null;
         this.prev_time = null;
 
-        //this.prp = this.scene.view.prp;
-        //this.srp = this.scene.view.srp;
-        ///this.vup = this.scene.view.vup;
-
-        this.prp = new Vector3(0, 10, -5);
-        this.srp = new Vector3(20, 15, -40);
-        this.vup = new Vector3(1, 1, 0);
-
         //
         //  Square
         //
@@ -127,6 +119,42 @@ class Renderer {
             
         }
 
+        //
+        // sphere
+        //
+
+        this.sphereVert = [];
+        let centerS = this.scene.models[4].center;
+        let radiusS = this.scene.models[4].radius;
+        let stacks = this.scene.models[4].stacks;
+        let slices = this.scene.models[4].slices;
+        let angleSlices = 2 * Math.PI / (slices + 1);
+        let angleStacks = 2 * Math.PI / (stacks + 1);
+        for (let i = 0; i < stacks + 1; i++) {
+
+            this.sphereVert[i] = new Vector(4);
+            this.sphereVert[i].x = centerS.x;// + Math.sin(i * angleStacks);
+            this.sphereVert[i].z = centerS.z + Math.sin(i * angleStacks);
+            this.sphereVert[i].y = centerS.y + Math.cos(i * angleStacks);
+            this.sphereVert[i].w = 1;
+            let translateNeg = new Matrix(4, 4);
+            mat4x4Translate(translateNeg, -this.sphereVert[i].x, -this.sphereVert[i].y, -this.sphereVert[i].z);
+            let rotate = new Matrix(4, 4);
+            mat4x4RotateZ(rotate, 90);
+            console.log(rotate);
+            let translatePos = new Matrix(4, 4);
+            mat4x4Translate(translatePos, this.sphereVert[i].x, this.sphereVert[i].y, this.sphereVert[i].z);
+
+            console.log(this.sphereVert[i].values);
+            this.sphereVert[i] = Matrix.multiply([translatePos, rotate, translateNeg, this.sphereVert[i]]);
+            console.log(this.sphereVert[i].values);
+            //console.log(temp.values);
+
+            // angle = 180 / slices
+            // rotate using transform matrix around the z axis
+
+        }
+
     }
 
     //
@@ -137,49 +165,141 @@ class Renderer {
     //
     rotateLeft() {
 
-        this.prp.x++;
+        let n = new Vector(3);
+        n.values = [this.scene.view.prp.x-this.scene.view.srp.x, this.scene.view.prp.y-this.scene.view.srp.y, this.scene.view.prp.z-this.scene.view.srp.z];
+        n.normalize();
+
+        let u = this.scene.view.vup.cross(n);
+        u.normalize();
+
+        let v = n.cross(u);
+        let prp = new Vector4(this.scene.view.prp.x, this.scene.view.prp.y, this.scene.view.prp.z, 1);
+        let srp = new Vector4(this.scene.view.srp.x, this.scene.view.srp.y, this.scene.view.srp.z, 1)
+
+        let translateNeg = new Matrix(4, 4);
+        mat4x4Translate(translateNeg, -this.scene.view.prp.x, -this.scene.view.prp.y, -this.scene.view.prp.z);
+        let translatePos = new Matrix(4, 4);
+        mat4x4Translate(translatePos, this.scene.view.prp.x, this.scene.view.prp.y, this.scene.view.prp.z);
+    
+        let rotate = new Matrix(4, 4);
+        rotate.values = [[u.x, u.y, u.z, 0],
+                         [v.x, v.y, v.z, 0],
+                         [n.x, n.y, n.z, 0],
+                         [0, 0, 0, 1]];
+        
+        this.scene.view.prp = Matrix.multiply([rotate, translateNeg, prp]);
+
+        let rotateY = new Matrix(4, 4);
+        mat4x4RotateY(rotateY, 30);
+        srp = Matrix.multiply([rotateY, srp]);
+        this.scene.view.srp.values = [srp.x/srp.w, srp.y/srp.w, srp.z/srp.w];
+
+        prp = Matrix.multiply([translatePos, rotate, this.scene.view.prp]);
+        this.scene.view.prp = new Vector3(prp.x/prp.w, prp.y/prp.w, prp.z/prp.w);
+
+        console.log("post");
+        console.log(this.scene.view.srp.values);
+        
+        //transform and rotate
+
+        // shoot only srp will
+
+        // mathc to xyz coords
+        // then use rotate transform to rotate along whichever axis
+        // then transform back
 
     }
     
     //
     rotateRight() {
 
-        this.prp.x--;
+        let n = new Vector(3);
+        n.values = [this.scene.view.prp.x-this.scene.view.srp.x, this.scene.view.prp.y-this.scene.view.srp.y, this.scene.view.prp.z-this.scene.view.srp.z];
+        n.normalize();
+
+        u = this.scene.view.vup.cross(n);
+        u.normalize();
+
+        let v = n.cross(u);
+        let prp = new Vector4(this.scene.view.prp.x, this.scene.view.prp.y, this.scene.view.prp.z, 1);
+        let srp = new Vector4(this.scene.view.srp.x, this.scene.view.srp.y, this.scene.view.srp.z, 1)
+
+        let translateNeg = new Matrix(4, 4);
+        mat4x4Translate(translateNeg, -this.scene.view.prp.x, -this.scene.view.prp.y, -this.scene.view.prp.z);
+        let translatePos = new Matrix(4, 4);
+        mat4x4Translate(translatePos, this.scene.view.prp.x, this.scene.view.prp.y, this.scene.view.prp.z);
+    
+        let rotate = new Matrix(4, 4);
+        rotate.values = [[u.x, u.y, u.z, 0],
+                         [v.x, v.y, v.z, 0],
+                         [n.x, n.y, n.z, 0],
+                         [0, 0, 0, 1]];
+        
+        this.scene.view.prp = Matrix.multiply([rotate, translateNeg, prp]);
+
+        let rotateY = new Matrix(4, 4);
+        mat4x4RotateY(rotateY, -30);
+        srp = Matrix.multiply([rotateY, srp]);
+        this.scene.view.srp.values = [srp.x/srp.w, srp.y/srp.w, srp.z/srp.w];
+
+        prp = Matrix.multiply([translatePos, rotate, this.scene.view.prp]);
+        this.scene.view.prp = new Vector3(prp.x/prp.w, prp.y/prp.w, prp.z/prp.w);
+
+        console.log("post");
+        console.log(this.scene.view.srp);
+        console.log(this.scene.view.prp);
 
     }
     
     //
     moveLeft() {
 
-        this.prp.x--;
-        this.srp.x--;
-        // not right but onto something
-        //this.prp.y++;   
-        //this.srp.y++;
+        let n = new Vector(3);
+        n.values = [this.scene.view.prp.x-this.scene.view.srp.x, this.scene.view.prp.y-this.scene.view.srp.y, this.scene.view.prp.z-this.scene.view.srp.z];
+        n.normalize();
+        u = this.scene.view.vup.cross(n);
+        u.normalize();
+
+        this.scene.view.prp = this.scene.view.prp.subtract(u);
+        this.scene.view.srp = this.scene.view.srp.subtract(u);
 
     }
     
     //
     moveRight() {
 
-        this.prp.x++;
-        this.srp.x++;
+        let n = new Vector(3);
+        n.values = [this.scene.view.prp.x-this.scene.view.srp.x, this.scene.view.prp.y-this.scene.view.srp.y, this.scene.view.prp.z-this.scene.view.srp.z];
+        n.normalize();
+        u = this.scene.view.vup.cross(n);
+        u.normalize();
+
+        this.scene.view.prp = this.scene.view.prp.add(u);
+        this.scene.view.srp = this.scene.view.srp.add(u);
 
     }
     
     //
     moveBackward() {
 
-        this.prp.z++;
-        this.srp.z++;
+        let n = new Vector(3);
+        n.values = [this.scene.view.prp.x-this.scene.view.srp.x, this.scene.view.prp.y-this.scene.view.srp.y, this.scene.view.prp.z-this.scene.view.srp.z];
+        n.normalize();
+
+        this.scene.view.prp = this.scene.view.prp.add(n);
+        this.scene.view.srp = this.scene.view.srp.add(n);
 
     }
     
     //
     moveForward() {
 
-        this.prp.z--;
-        this.srp.z--;
+        let n = new Vector(3);
+        n.values = [this.scene.view.prp.x-this.scene.view.srp.x, this.scene.view.prp.y-this.scene.view.srp.y, this.scene.view.prp.z-this.scene.view.srp.z];
+        n.normalize();
+
+        this.scene.view.prp = this.scene.view.prp.subtract(n);
+        this.scene.view.srp = this.scene.view.srp.subtract(n);
 
     }
 
@@ -188,7 +308,7 @@ class Renderer {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // console.log('draw()');
-        let nPer = mat4x4Perspective(this.prp, this.srp, this.vup, [-15, 9, -12, 6, 10, 100]);
+        let nPer = mat4x4Perspective(this.scene.view.prp, this.scene.view.srp, this.scene.view.vup, this.scene.view.clip);
         let mPer = mat4x4MPer();
         let view = mat4x4Viewport(800, 600);
 
@@ -296,12 +416,12 @@ class Renderer {
                     vert1W3 = Matrix.multiply([view, mPer, vert1W3]);                     // Projects to 2D then to view
                     let vert13 = new Vector3(vert1W3.x / vert1W3.w, vert1W3.y / vert1W3.w);  // Converts Vectors to x-y Coords
                     
+                    // wtf happened here
+                //vert1W = Matrix.multiply([view, mPer, vert1W]);                     // Projects to 2D then to view
+                //let vert1 = new Vector3(vert1W.x / vert1W.w, vert1W.y / vert1W.w);  // Converts Vectors to x-y Coords
 
-                vert1W = Matrix.multiply([view, mPer, vert1W]);                     // Projects to 2D then to view
-                let vert1 = new Vector3(vert1W.x / vert1W.w, vert1W.y / vert1W.w);  // Converts Vectors to x-y Coords
-
-                vert2W = Matrix.multiply([view, mPer, vert2W]);
-                let vert2 = new Vector3(vert2W.x / vert2W.w, vert2W.y / vert2W.w);
+                //vert2W = Matrix.multiply([view, mPer, vert2W]);
+                //let vert2 = new Vector3(vert2W.x / vert2W.w, vert2W.y / vert2W.w);
 
                 //console.log([vert1.x, vert1.y, vert2.x, vert2.y]);
                 //this.drawLine(vert1.x, vert1.y, vert2.x, vert2.y);
@@ -316,56 +436,7 @@ class Renderer {
             }
         }
 
-        //
-        //  Sphere
-        //
 
-        let vert = [];
-        let vertw = [];
-        let center = this.scene.models[2].center;
-        let radius = this.scene.models[2].radius;
-        vertw[0] = Vector4(center.x, center.y - radius, center.z, 1);
-        vertw[1] = Vector4(center.x, center.y + radius, center.z, 1);
-        //vertw[2] = Vector4(center.x - radius, center.y, center.z, 1);
-        //vertw[3] = Vector4(center.x + radius, center.y, center.z, 1);
-        //vertw[4] = Vector4(center.x, center.y, center.z - radius, 1);
-        //vertw[5] = Vector4(center.x, center.y, center.z + radius, 1);
-        let slices = this.scene.models[2].slices;
-        let stacks = this.scene.models[2].stacks;
-        
-        let i = 2;
-        for (let sl = 1; sl < slices; sl++) {
-            for (let st = 1; st < stacks; st++) {
-                //vertw[i] = Vector4(center.x, (center.y - radius) + (sl * 2 * (radius / slices)), center.z, 1);
-                if (st == 3) {
-                    vertw[i] = Vector4((center.x - radius), (center.y - radius) + (sl * (radius / slices)), (center.z + radius), 1);
-                }
-                else if (st == 1) {
-                    vertw[i] = Vector4((center.x - radius), (center.y - radius) + (sl * 2 * (radius / slices)), (center.z + radius), 1);
-                    //(center.x - radius) + (st * 2 * (radius / stacks))
-                }
-                else {
-                    vertw[i] = Vector4(center.x, (center.y - radius) + (sl * 2 * (radius / slices)), center.z, 1);
-                }
-                i++
-            }
-        }
-        //vertw[vertw.length] = Vector4(center.x + radius, center.y, center.z, 1);
-
-        for (let i = 0; i < vertw.length; i++) {
-            vertw[i] = Matrix.multiply([nPer, vertw[i]]);
-            vertw[i] = Matrix.multiply([view, mPer, vertw[i]]);
-            vert[i] = new Vector3(vertw[i].x / vertw[i].w, vertw[i].y / vertw[i].w, vertw[i].z / vertw[i].w);
-        }
-        for (let i = 0; i < vert.length; i++) {
-            this.drawLine(vert[i].x, vert[i].y, vert[i].x, vert[i].y);
-        }
-
-        for (let i = 0; i < vert.length; i++) {
-            for (let j = 0; j < vert.length; j++) {
-                this.drawLine(vert[i].x, vert[i].y, vert[j].x, vert[j].y);
-            }
-        }
 
         for (let e = 0; e < this.scene.models[3].edges.length; e++) {   // Loops Edges
             for (let i = 0; i < this.scene.models[3].edges[e].length-1; i++) {  // Loops Verts
@@ -402,11 +473,33 @@ class Renderer {
 
             }
         }
+
+        // sphere
+
+        let vertw = [];
+        let vert = [];
+        //console.log("check");
+        for (let i = 0; i < this.sphereVert.length; i++) {
+            vertw[i] = Matrix.multiply([nPer, this.sphereVert[i]]);
+            //console.log("HERE");
+            //console.log(this.sphereVert[i].y);
+            //console.log(vertw[i].y);
+            vertw[i] = Matrix.multiply([view, mPer, vertw[i]]);
+            vert[i] = new Vector3(vertw[i].x / vertw[i].w, vertw[i].y / vertw[i].w, vertw[i].z / vertw[i].w);
+        }
+        for (let i = 0; i < vert.length; i++) {
+         //   for (let j = 0; j < vert.length; j++) {
+         //       this.drawLine(vert[i].x, vert[i].y, vert[j].x, vert[j].y);
+         //   }
+            this.drawLine(vert[i].x, vert[i].y, vert[i].x, vert[i].y);
+        }
+
+       /* for (let i = 0; i < this.sphereVert.length; i++) {
+            this.drawLine(this.sphereVert[i].x, this.sphereVert[i].y, this.sphereVert[i].x, this.sphereVert[i].y);
+        }*/
+
     }
 
-/*
-
-*/
 
         // TODO: implement drawing here!
         // For each model

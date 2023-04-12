@@ -100,13 +100,6 @@ function init() {
                 ]
             },
             {
-                type: 'sphere',
-                center: [0, 10, -30],
-                radius: 10,
-                slices: 4,
-                stacks: 4
-            },
-            {
                 type: 'cone',
                 center: [5, 20, -30],
                 radius: 3,
@@ -127,6 +120,13 @@ function init() {
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1],
                     [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 11]
                 ]
+            },
+            {
+                type: 'sphere',
+                center: [0, 10, -20],
+                radius: 10,
+                slices: 4,
+                stacks: 4
             }
         ]
     };
