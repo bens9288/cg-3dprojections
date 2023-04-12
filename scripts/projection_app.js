@@ -54,9 +54,9 @@ function init() {
 
     let initial_scene = {
         view: {
-            prp: [44, 20, -16],
-            srp: [20, 20, -40],
-            vup: [0, 1, 0],
+            prp: [0, 10, -5],
+            srp: [20, 15, -40],
+            vup: [1, 1, 0],
             clip: [-19, 5, -10, 8, 12, 100]
         },
         models: [
@@ -82,7 +82,11 @@ function init() {
                     [2, 7],
                     [3, 8],
                     [4, 9]
-                ]
+                ],
+                "animation": {
+                    "axis": "x",
+                    "rps": 0.5
+                }
             },
             {
                 type: 'cube',
@@ -97,7 +101,11 @@ function init() {
                     [2, 3],
                     [4, 5],
                     [6, 7]
-                ]
+                ],
+                "animation": {
+                    "axis": "y",
+                    "rps": 0.3
+                }
             },
             {
                 type: 'cone',
@@ -108,7 +116,11 @@ function init() {
                 edges : [       //only edges defined is peak to the top
                     [0,1],
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 1]
-                ]
+                ],
+                "animation": {
+                    "axis": "z",
+                    "rps": 0.5
+                }
             },
             {
                 type: 'cylinder',
@@ -119,7 +131,11 @@ function init() {
                 edges : [       //only edges defined is peak to the top
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1],
                     [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 11]
-                ]
+                ],
+                "animation": {
+                    "axis": "y",
+                    "rps": 0.25
+                }
             }
         ]
     };
