@@ -150,7 +150,7 @@ class Renderer {
                         this.cylVert[j].y = centerCyl.y + (radiusCyl * Math.cos(j*angleCyl));
                         this.cylVert[j].z = centerCyl.z;
                         this.scene.models[i].edges[2+j] = [j, j+numCyl];
-                        // console.log(this.scene.models[3].edges[2+i] = [i, i+numCyl]);
+                        console.log(this.scene.models[i].edges[2+j]);
                     }
                     else {  // second Circle 
                         this.cylVert[j].x = centerCyl.x + (radiusCyl * Math.sin((j-numCyl)*angleCyl));
@@ -270,7 +270,7 @@ class Renderer {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // console.log('draw()');
-        let nPer = mat4x4Perspective(this.prp, this.srp, this.vup, [-15, 9, -12, 6, 10, 100]);
+        let nPer = mat4x4Perspective(this.scene.view.prp, this.scene.view.srp, this.scene.view.vup, [-15, 9, -12, 6, 10, 100]);
         let mPer = mat4x4MPer();
         let view = mat4x4Viewport(800, 600);
         // house = intial
@@ -293,11 +293,12 @@ class Renderer {
                         vert1W = Matrix.multiply([nPer, this.rotate[m], this.coneVert[vert1Index]]);
                     } else if (this.scene.models[m].type == 'cylinder'){
                         vert1W = Matrix.multiply([nPer, this.rotate[m], this.cylVert[vert1Index]]);
+                        
                     }
 
 
                     let vert2Index = this.scene.models[m].edges[e][(i+1)];
-                    
+                    // console.log("vert1", vert1Index, "vert2", vert2Index);
                     if (this.scene.models[m].type == 'generic'){
                         vert2W = Matrix.multiply([nPer, this.rotate[m], this.scene.models[m].vertices[vert2Index]]);
                     } else if (this.scene.models[m].type == 'cube'){
@@ -309,10 +310,10 @@ class Renderer {
                     }
                     // console.log(this.scene.models[m].type, "edge", e, "vert: ", i);
                     // console.log("vert1W: ", vert1W, "vert2W", vert2W);
-                    if (vert1W == null | vert2W == null) {
-                        console.log(this.scene.models[m].type, "edge", e, "vert: ", i);
-                        console.log(vert1W, vert2W);
-                    }
+                    // if (vert1W == null | vert2W == null) {
+                    //     console.log(this.scene.models[m].type, "edge", e, "vert: ", i);
+                    //     console.log(vert1W, vert2W);
+                    // }
                     //
                     //  Clip Here
                     //
